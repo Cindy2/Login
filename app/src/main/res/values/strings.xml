@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Login</string>
+    <string name="et_name">请输入用户名</string>
+    <string name="et_key">请输入密码</string>
+    <string name="cb_remember">记住用户名和密码</string>
+    <string name="bt_login">登录</string>
+    <string name="button1">Create doc 1</string>
+    <string name="button2">Create doc 2</string>
+    <string name="button3">Create doc 3</string>
+</resources>
