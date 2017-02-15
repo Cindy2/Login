@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.admin.login.domain.Message;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,6 +23,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressLint("WorldReadableFiles")
 public class MainActivity extends AppCompatActivity {
@@ -29,9 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private FileOutputStream fileOutputStream;
     private FileInputStream fileInputStream;
     private SharedPreferences sp;
-
     File path = Environment.getExternalStorageDirectory();
-
+    List<Message> smsList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +45,14 @@ public class MainActivity extends AppCompatActivity {
 
         readAccount();
         sdcard();
+// import com.example.admin.login.domain.Message;
+        smsList = new ArrayList<Message>();
+        for (int i = 0;i < 10; i++){
+            Message sms = new Message("You are greate."+i,System.currentTimeMillis()+"","138"+i+i,"1");
+            smsList.add(sms);
+        }
     }
+
 
 //获取SD卡剩余容量
     private void sdcard() {
@@ -99,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
             ed.putString("name",name);
             ed.putString("key",key);
             ed.commit();
-
         Toast.makeText(this, "Login succeed", Toast.LENGTH_SHORT).show();
      }
     }
@@ -175,6 +184,44 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-}
+//    备份短信
+    public void backupMessage(View view){
+        //在内存中把xml备份短信的格式拼接出来
+        StringBuffer sb = new StringBuffer();
+        sb.append("<?xml version='1.0' encoding='utf-8' standalone='yes'?");
+        sb.append("<message>");
+        for (Message sms : smsList){
+            sb.append("<sms>");
+
+            sb.append("<bady>");
+            sb.append(sms.getBody());
+            sb.append("</bady>");
+
+            sb.append("<data>");
+            sb.append(sms.getData());
+            sb.append("</data>");
+
+            sb.append("<type>");
+            sb.append(sms.getType());
+            sb.append("</type>");
+
+            sb.append("<address>");
+            sb.append(sms.getAddress());
+            sb.append("</address>");
+
+            sb.append("</sms>");
+        }
+        sb.append("</message>");
+
+        File file = new File("data/data/com.example.admin.login/sms.xml");
+        try {
+            fileOutputStream = new FileOutputStream(file);
+            fileOutputStream.write(sb.toString().getBytes());
+            fileOutputStream.close();
+        		} catch (Exception e) {
+        			e.printStackTrace();
+        		}
+        	}
+    }
+

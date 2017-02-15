@@ -54,12 +54,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button1"
         android:onClick="create1"/>
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button2"
         android:onClick="create2"/>
@@ -68,6 +68,12 @@
         android:layout_height="wrap_content"
         android:text="读取全局可读的文件"
         android:onClick="click"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="备份短信"
+        android:onClick="backupMessage"
         />
 
     </LinearLayout>
