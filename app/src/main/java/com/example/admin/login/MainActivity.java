@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.util.Xml;
 import android.view.View;
 import android.widget.CheckBox;
@@ -31,6 +32,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.R.attr.name;
 
 @SuppressLint("WorldReadableFiles")
 public class MainActivity extends AppCompatActivity {
@@ -305,6 +308,7 @@ public class MainActivity extends AppCompatActivity {
                     case XmlPullParser.END_TAG:
                         if ("weather".equals(xmlPullParser.getName())){
                             mWeatherList.add(weather);
+                            Log.d("MainActivity","name is"+name);
                         }break;
                 }
                 //把指针移动到下一个节点，并返回该节点的事件类型
