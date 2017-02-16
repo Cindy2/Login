@@ -16,7 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.admin.login.domain.Message;
+import com.example.admin.login.domain.weather;
 
+import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
 
 import java.io.BufferedReader;
@@ -25,6 +27,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +38,13 @@ public class MainActivity extends AppCompatActivity {
     private TextView tv_sdcard;
     private FileOutputStream fileOutputStream;
     private FileInputStream fileInputStream;
+
+    private InputStream mInputStream;
+
     private SharedPreferences sp;
     File path = Environment.getExternalStorageDirectory();
     List<Message> smsList;
+    List<weather> mWeatherList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -188,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-//    备份短信
+//    XmlSerializer备份短信
     public void backupMessage(View view){
         //在内存中把xml备份短信的格式拼接出来
        /** StringBuffer sb = new StringBuffer();
@@ -260,6 +267,57 @@ public class MainActivity extends AppCompatActivity {
         			e.printStackTrace();
         		}
         	}
+//    XmlPullParser解析天气信息
+    public void weatherMessage(View view){
+        //获取到src文件夹下的资源文件
+        mInputStream = getClassLoader().getResourceAsStream("weather.xml");
+        //拿到pull解析器对象
+        XmlPullParser xmlPullParser = Xml.newPullParser();
+        try {
+            xmlPullParser.setInput(mInputStream,"gbk");
+            /**获取当前节点的事件类型事件类型主要有五种
+             START_DOCUMENT：xml头的事件类型
+                    * END_DOCUMENT：xml尾的事件类型
+                    * START_TAG：开始节点的事件类型
+                    * END_TAG：结束节点的事件类型
+                    * TEXT：文本节点的事件类型*/
+            int type = xmlPullParser.getEventType();
+            weather weather = null;
+            while (type != XmlPullParser.END_DOCUMENT){
+                switch (type){
+                    case XmlPullParser.START_TAG:
+                        if ("weather".equals(xmlPullParser.getName())) {
+                            mWeatherList = new ArrayList<weather>();
+                        }else if ("city".equals(xmlPullParser.getName())){
+                            //创建weather的javabean对象
+                            weather = new weather();
+                        }else if ("name".equals(xmlPullParser.getName())){
+                            String name = xmlPullParser.nextText();
+                            weather.setName(name);
+                        }else if ("temp".equals(xmlPullParser.getName())){
+                            String temp = xmlPullParser.nextText();
+                            weather.setName(temp);
+                        }else if ("pm".equals(xmlPullParser.getName())){
+                            String pm = xmlPullParser.nextText();
+                            weather.setName(pm);
+                        }
+                        break;
+                    case XmlPullParser.END_TAG:
+                        if ("weather".equals(xmlPullParser.getName())){
+                            mWeatherList.add(weather);
+                        }break;
+                }
+                //把指针移动到下一个节点，并返回该节点的事件类型
+                type = xmlPullParser.next();
+            }
+            for (weather weather1:mWeatherList){
+                System.out.println(weather1.toString());
+            }
+        		} catch (Exception e) {
+        			e.printStackTrace();
+        		}
+        	}
     }
+
     
 

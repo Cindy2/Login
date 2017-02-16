@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <weather>
+    <city>
+        <name>潮州</name>
+        <temp>18</temp>
+        <pm>63</pm>
+    </city>
+    <city>
+        <name>广州</name>
+        <temp>21</temp>
+        <pm>72</pm>
+    </city>
+    <city>
+        <name>中山</name>
+        <temp>21</temp>
+        <pm>81</pm>
+    </city>
+</weather>
