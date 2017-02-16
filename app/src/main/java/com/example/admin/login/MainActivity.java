@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.Formatter;
+import android.util.Xml;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.admin.login.domain.Message;
+
+import org.xmlpull.v1.XmlSerializer;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -188,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
 //    备份短信
     public void backupMessage(View view){
         //在内存中把xml备份短信的格式拼接出来
-        StringBuffer sb = new StringBuffer();
+       /** StringBuffer sb = new StringBuffer();
         sb.append("<?xml version='1.0' encoding='utf-8' standalone='yes'?");
         sb.append("<message>");
         for (Message sms : smsList){
@@ -213,7 +216,6 @@ public class MainActivity extends AppCompatActivity {
             sb.append("</sms>");
         }
         sb.append("</message>");
-
         File file = new File("data/data/com.example.admin.login/sms.xml");
         try {
             fileOutputStream = new FileOutputStream(file);
@@ -221,7 +223,43 @@ public class MainActivity extends AppCompatActivity {
             fileOutputStream.close();
         		} catch (Exception e) {
         			e.printStackTrace();
+        		}*/
+        //使用xml序列化器生成xml文件
+        //1.拿到序列化器对象
+        XmlSerializer xmlSerializer = Xml.newSerializer();
+        //2.初始化
+        File file = new File("data/data/com.example.admin.login/sms2.xml");
+        try {
+                fileOutputStream = new FileOutputStream(file);
+                 //enconding:指定用什么编码生成xml文件
+                xmlSerializer.setOutput(fileOutputStream,"utf-8");
+                xmlSerializer.startTag(null,"message");
+                for (Message message : smsList){
+                xmlSerializer.startTag(null,"sms");
+                    xmlSerializer.startTag(null,"body");
+                    xmlSerializer.text(message.getBody()+"<body>");
+                    xmlSerializer.endTag(null,"body");
+
+                    xmlSerializer.startTag(null,"data");
+                    xmlSerializer.text(message.getData()+"<data>");
+                    xmlSerializer.endTag(null,"data");
+
+                    xmlSerializer.startTag(null,"type");
+                    xmlSerializer.text(message.getType()+"<type>");
+                    xmlSerializer.endTag(null,"type");
+
+                    xmlSerializer.startTag(null,"address");
+                    xmlSerializer.text(message.getAddress()+"<address>");
+                    xmlSerializer.endTag(null,"address");
+                xmlSerializer.endTag(null,"sms");
+                }
+            xmlSerializer.endTag(null,"message");
+            //告诉序列化器，文件生成完毕
+            xmlSerializer.endDocument();
+        		} catch (Exception e) {
+        			e.printStackTrace();
         		}
         	}
     }
+    
 
